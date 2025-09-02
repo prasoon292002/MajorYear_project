@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+
+    <!-- OpenGL Surface for 3D Rendering -->
+    <android.opengl.GLSurfaceView
+        android:id="@+id/gl_surface_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Top Control Panel -->
+    <LinearLayout
+        android:id="@+id/top_control_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:background="#80000000"
+        android:padding="12dp">
+
+        <ImageButton
+            android:id="@+id/btn_back"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="@drawable/circle_button_white"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="3D Room Map"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical" />
+
+        <ImageButton
+            android:id="@+id/btn_reset_view"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_refresh"
+            android:background="@drawable/circle_button_white" />
+
+    </LinearLayout>
+
+    <!-- Right Side Controls -->
+    <LinearLayout
+        android:id="@+id/right_controls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/btn_zoom_in"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_zoom_in"
+            android:background="@drawable/circle_button_dark"
+            android:layout_marginBottom="12dp" />
+
+        <ImageButton
+            android:id="@+id/btn_zoom_out"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_zoom_out"
+            android:background="@drawable/circle_button_dark"
+            android:layout_marginBottom="12dp" />
+
+        <ImageButton
+            android:id="@+id/btn_rotate_left"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_rotate_left"
+            android:background="@drawable/circle_button_dark"
+            android:layout_marginBottom="12dp" />
+
+        <ImageButton
+            android:id="@+id/btn_rotate_right"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_rotate_right"
+            android:background="@drawable/circle_button_dark" />
+
+    </LinearLayout>
+
+    <!-- Bottom Information Panel -->
+    <LinearLayout
+        android:id="@+id/bottom_info_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:background="@drawable/bottom_panel_background"
+        android:padding="16dp">
+
+        <!-- Obstacle Information -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Obstacles:"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_obstacle_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 detected"
+                android:textColor="#3498db"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Obstacle Details -->
+        <TextView
+            android:id="@+id/tv_obstacle_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No obstacles currently detected in the room"
+            android:textColor="#bdc3c7"
+            android:textSize="12sp"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Action Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_clear_obstacles"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="Clear Map"
+                android:textColor="@android:color/white"
+                android:background="@drawable/button_secondary"
+                android:layout_marginEnd="8dp"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/btn_save_map"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="Save Map"
+                android:textColor="@android:color/white"
+                android:background="@drawable/button_primary"
+                android:layout_marginStart="8dp"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Loading Indicator -->
+    <ProgressBar
+        android:id="@+id/progress_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

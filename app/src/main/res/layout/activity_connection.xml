@@ -7,132 +7,132 @@
     android:padding="16dp">
 
     <!-- Header -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="24dp">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginBottom="24dp">-->
 
-        <ImageButton
-            android:id="@+id/btn_back"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_arrow_back"
-            android:background="@drawable/circle_button_light"
-            android:layout_gravity="center_vertical" />
+<!--        <ImageButton-->
+<!--            android:id="@+id/btn_back"-->
+<!--            android:layout_width="40dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:src="@drawable/ic_arrow_back"-->
+<!--            android:background="@drawable/circle_button_light"-->
+<!--            android:layout_gravity="center_vertical" />-->
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Connect Smart Glasses"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="#2c3e50"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp" />
+<!--        <TextView-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="Connect Smart Glasses"-->
+<!--            android:textSize="20sp"-->
+<!--            android:textStyle="bold"-->
+<!--            android:textColor="#2c3e50"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_marginStart="16dp" />-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
-    <!-- Connection Status Card -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp">
+<!--    &lt;!&ndash; Connection Status Card &ndash;&gt;-->
+<!--    <androidx.cardview.widget.CardView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginBottom="24dp"-->
+<!--        app:cardCornerRadius="12dp"-->
+<!--        app:cardElevation="4dp">-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="20dp">
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:padding="20dp">-->
 
-            <ImageView
-                android:id="@+id/img_connection_status"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/ic_glasses_disconnected"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp" />
+<!--            <ImageView-->
+<!--                android:id="@+id/img_connection_status"-->
+<!--                android:layout_width="80dp"-->
+<!--                android:layout_height="80dp"-->
+<!--                android:src="@drawable/ic_glasses_disconnected"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:layout_marginBottom="16dp" />-->
 
-            <TextView
-                android:id="@+id/tv_connection_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Glasses Disconnected"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#e74c3c"
-                android:gravity="center"
-                android:layout_marginBottom="8dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/tv_connection_title"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Glasses Disconnected"-->
+<!--                android:textSize="18sp"-->
+<!--                android:textStyle="bold"-->
+<!--                android:textColor="#e74c3c"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_marginBottom="8dp" />-->
 
-            <TextView
-                android:id="@+id/tv_connection_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Please turn on Bluetooth and ensure your smart glasses are in pairing mode."
-                android:textSize="14sp"
-                android:textColor="#7f8c8d"
-                android:gravity="center"
-                android:layout_marginBottom="16dp" />
+<!--            <TextView-->
+<!--                android:id="@+id/tv_connection_message"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Please turn on Bluetooth and ensure your smart glasses are in pairing mode."-->
+<!--                android:textSize="14sp"-->
+<!--                android:textColor="#7f8c8d"-->
+<!--                android:gravity="center"-->
+<!--                android:layout_marginBottom="16dp" />-->
 
-            <ProgressBar
-                android:id="@+id/progress_connection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:visibility="gone" />
+<!--            <ProgressBar-->
+<!--                android:id="@+id/progress_connection"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_gravity="center_horizontal"-->
+<!--                android:visibility="gone" />-->
 
-        </LinearLayout>
+<!--        </LinearLayout>-->
 
-    </androidx.cardview.widget.CardView>
+<!--    </androidx.cardview.widget.CardView>-->
 
-    <!-- Available Devices -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Available Devices"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        android:textColor="#2c3e50"
-        android:layout_marginBottom="12dp" />
+<!--    &lt;!&ndash; Available Devices &ndash;&gt;-->
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Available Devices"-->
+<!--        android:textSize="16sp"-->
+<!--        android:textStyle="bold"-->
+<!--        android:textColor="#2c3e50"-->
+<!--        android:layout_marginBottom="12dp" />-->
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_devices"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="@android:color/white"
-        android:padding="8dp" />
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/recycler_devices"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:background="@android:color/white"-->
+<!--        android:padding="8dp" />-->
 
-    <!-- Connection Buttons -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="16dp">
+<!--    &lt;!&ndash; Connection Buttons &ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginTop="16dp">-->
 
-        <Button
-            android:id="@+id/btn_scan_devices"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Scan for Devices"
-            android:textColor="@android:color/white"
-            android:background="@drawable/button_primary"
-            android:layout_marginEnd="8dp" />
+<!--        <Button-->
+<!--            android:id="@+id/btn_scan_devices"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="Scan for Devices"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:background="@drawable/button_primary"-->
+<!--            android:layout_marginEnd="8dp" />-->
 
-        <Button
-            android:id="@+id/btn_connect_manual"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="Manual Connect"
-            android:textColor="#3498db"
-            android:background="@drawable/button_outline"
-            android:layout_marginStart="8dp" />
+<!--        <Button-->
+<!--            android:id="@+id/btn_connect_manual"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:text="Manual Connect"-->
+<!--            android:textColor="#3498db"-->
+<!--            android:background="@drawable/button_outline"-->
+<!--            android:layout_marginStart="8dp" />-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
 </LinearLayout>

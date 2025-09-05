@@ -5,31 +5,21 @@ import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import java.util.Locale;
 
 public class NavigationActivity extends Activity implements TextToSpeech.OnInitListener {
 
     private TextToSpeech textToSpeech;
-    private TextView instructionText;
-    private TextView stepCounter;
-    private ImageView directionArrow;
-    private Button nextButton;
+    private Button toggleButton;
     private Button backButton;
+    private LinearLayout outsideViewLayout;
+    private LinearLayout insideViewLayout;
+    private TextView statusText;
 
-    // Simple demo steps (no backend logic)
-    private String[] instructions = {
-            "Welcome to navigation demo",
-            "Walk forward 3 steps",
-            "Turn right at the sofa",
-            "Continue straight 5 steps",
-            "Turn left toward the door",
-            "Destination reached!"
-    };
-
-    private int currentStep = 0;
+    private boolean isOutsideView = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,17 +28,17 @@ public class NavigationActivity extends Activity implements TextToSpeech.OnInitL
 
         initializeViews();
         initializeTextToSpeech();
-        showCurrentStep();
+        updateViewState();
     }
 
     private void initializeViews() {
-        instructionText = findViewById(R.id.instruction_text);
-        stepCounter = findViewById(R.id.step_counter);
-        directionArrow = findViewById(R.id.direction_arrow);
-        nextButton = findViewById(R.id.next_button);
+        toggleButton = findViewById(R.id.toggle_button);
         backButton = findViewById(R.id.back_button);
+        outsideViewLayout = findViewById(R.id.outside_view_layout);
+        insideViewLayout = findViewById(R.id.inside_view_layout);
+        statusText = findViewById(R.id.status_text);
 
-        nextButton.setOnClickListener(v -> nextStep());
+        toggleButton.setOnClickListener(v -> toggleView());
         backButton.setOnClickListener(v -> {
             speakOut("Going back to main menu");
             finish();
@@ -63,49 +53,32 @@ public class NavigationActivity extends Activity implements TextToSpeech.OnInitL
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
             textToSpeech.setLanguage(Locale.US);
-            speakOut(instructions[currentStep]);
+            speakOut(isOutsideView ? "Outside view activated" : "Inside view activated");
         }
     }
 
-    private void nextStep() {
-        currentStep++;
-        if (currentStep >= instructions.length) {
-            currentStep = 0; // Restart demo
-        }
-        showCurrentStep();
-        speakOut(instructions[currentStep]);
+    private void toggleView() {
+        isOutsideView = !isOutsideView;
+        updateViewState();
+
+        String announcement = isOutsideView ? "Switched to outside view" : "Switched to inside view";
+        speakOut(announcement);
     }
 
-    private void showCurrentStep() {
-        instructionText.setText(instructions[currentStep]);
-        stepCounter.setText("Step " + (currentStep + 1) + " of " + instructions.length);
-
-        // Update arrow based on instruction
-        updateArrow(instructions[currentStep]);
-
-        // Update button text
-        if (currentStep == instructions.length - 1) {
-            nextButton.setText("Restart Demo");
+    private void updateViewState() {
+        if (isOutsideView) {
+            // Show outside view
+            outsideViewLayout.setVisibility(View.VISIBLE);
+            insideViewLayout.setVisibility(View.GONE);
+            toggleButton.setText("Switch to Inside View");
+            statusText.setText("Outside View Active");
         } else {
-            nextButton.setText("Next Step");
+            // Show inside view
+            outsideViewLayout.setVisibility(View.GONE);
+            insideViewLayout.setVisibility(View.VISIBLE);
+            toggleButton.setText("Switch to Outside View");
+            statusText.setText("Inside View Active");
         }
-    }
-
-    private void updateArrow(String instruction) {
-        int rotation = 0;
-
-        if (instruction.toLowerCase().contains("forward") ||
-                instruction.toLowerCase().contains("straight")) {
-            rotation = 0; // Up
-        } else if (instruction.toLowerCase().contains("right")) {
-            rotation = 90; // Right
-        } else if (instruction.toLowerCase().contains("left")) {
-            rotation = 270; // Left
-        } else {
-            rotation = 0; // Default up
-        }
-
-        directionArrow.setRotation(rotation);
     }
 
     private void speakOut(String text) {

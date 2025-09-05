@@ -5,25 +5,49 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
-    <!-- OpenGL Surface View -->
-    <android.opengl.GLSurfaceView
-        android:id="@+id/gl_surface_view"
+    <!-- Simulated Camera Background -->
+    <View
+        android:id="@+id/simulated_camera"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="@drawable/room_background" />
 
-    <!-- Info Text Overlay -->
+    <!-- Camera Layout Container for Overlays -->
+    <FrameLayout
+        android:id="@+id/camera_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <!-- Status Text Overlay -->
     <TextView
         android:id="@+id/info_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="3D Room Demo"
-        android:textSize="16sp"
+        android:text="Smart Glasses Demo"
+        android:textSize="14sp"
         android:textColor="#FFFFFF"
-        android:background="#80000000"
+        android:background="#DD000000"
         android:padding="12dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center" />
+
+    <!-- Analysis Control Button -->
+    <Button
+        android:id="@+id/describe_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Analysis"
+        android:textColor="@android:color/white"
+        android:background="@drawable/button_primary"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="24dp"
+        android:layout_marginRight="16dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="12dp" />
 
     <!-- Back Button -->
     <Button
@@ -34,8 +58,9 @@
         android:textColor="@android:color/white"
         android:background="@drawable/button_primary"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentLeft="true"
         android:layout_marginBottom="24dp"
+        android:layout_marginLeft="16dp"
         android:paddingHorizontal="24dp"
         android:paddingVertical="12dp" />
 

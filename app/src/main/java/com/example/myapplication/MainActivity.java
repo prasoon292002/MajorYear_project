@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
     private TextView descriptionText;
     private Button map3DButton;
     private Button navigationButton;
+    private Button imageLabelingButton;
     private TextToSpeech textToSpeech;
 
     @Override
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
         descriptionText = findViewById(R.id.description_text);
         map3DButton = findViewById(R.id.map_3d_button);
         navigationButton = findViewById(R.id.navigation_button);
+        imageLabelingButton = findViewById(R.id.image_labeling_button);
 
         // Set up UI text
         titleText.setText("Smart Assistive Glasses");
@@ -63,6 +65,12 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             startActivity(intent);
         });
 
+        imageLabelingButton.setOnClickListener(v -> {
+            speakOut("Opening image labeling tool");
+            Intent intent = new Intent(MainActivity.this, ImageLabelingActivity.class);
+            startActivity(intent);
+        });
+
         // Long press for voice description
         map3DButton.setOnLongClickListener(v -> {
             speakOut("3D Room Mapping - Visualize your indoor environment with obstacles and pathways");
@@ -71,6 +79,11 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
 
         navigationButton.setOnLongClickListener(v -> {
             speakOut("Voice Navigation - Get step by step audio directions to reach your destination");
+            return true;
+        });
+
+        imageLabelingButton.setOnLongClickListener(v -> {
+            speakOut("Image Labeling - Train the system by labeling objects in room images for better recognition");
             return true;
         });
     }

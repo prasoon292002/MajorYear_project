@@ -35,6 +35,9 @@
             android:exported="false"
             android:label="3D Room Demo" />
         <activity
+            android:name=".ImageLabelingActivity"
+            android:exported="false" />
+        <activity
             android:name=".NavigationActivity"
             android:exported="false"
             android:label="Navigation Demo" />

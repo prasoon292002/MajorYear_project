@@ -1,111 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
-    android:padding="16dp">
+    android:background="#F7F7F7"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".ImageLabelingActivity">
 
-    <!-- Title -->
     <TextView
-        android:id="@+id/title_text"
+        android:id="@+id/titleLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
         android:text="Image Labeling Tool"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#2C3E50"
-        android:gravity="center"
-        android:layout_marginBottom="8dp" />
+        android:textColor="#000000"
+        android:textSize="22sp"
+        android:textStyle="bold" />
 
-    <!-- Instruction Text -->
     <TextView
-        android:id="@+id/instruction_text"
+        android:id="@+id/labelHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title_text"
+        android:background="#E1ECF4"
+        android:padding="8dp"
         android:text="No labels yet. Tap 'Add Label' to start marking objects."
-        android:textSize="14sp"
-        android:textColor="#7F8C8D"
-        android:gravity="center"
-        android:layout_marginBottom="16dp"
-        android:background="#E8F4FD"
-        android:padding="12dp" />
+        android:textAlignment="center"
+        android:textColor="#333333"
+        android:textSize="14sp" />
 
-    <!-- Image Container with Overlay -->
-    <FrameLayout
-        android:id="@+id/image_container"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/instruction_text"
-        android:layout_above="@id/button_container"
-        android:layout_marginBottom="16dp"
-        android:background="#FFFFFF"
-        android:elevation="4dp">
+        android:layout_weight="1">
 
-        <!-- Room Image -->
-        <ImageView
-            android:id="@+id/room_image"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitCenter"
-            android:src="@drawable/room_background"
-            android:contentDescription="Room to label" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp">
 
-    </FrameLayout>
+            <com.example.myapplication.TouchImageView
+                android:id="@+id/imageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:background="#FFFFFF"
+                android:scaleType="fitCenter" />
+        </LinearLayout>
+    </ScrollView>
 
-    <!-- Button Container -->
     <LinearLayout
-        android:id="@+id/button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/back_button"
         android:orientation="horizontal"
-        android:layout_marginBottom="12dp">
+        android:gravity="center"
+        android:layout_marginTop="8dp">
 
         <Button
-            android:id="@+id/add_label_button"
-            android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_weight="1"
+            android:id="@+id/addLabelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Add Label"
-            android:textSize="14sp"
-            android:textColor="@android:color/white"
-            android:background="@drawable/button_primary"
-            android:layout_marginEnd="8dp" />
+            android:layout_margin="5dp" />
 
         <Button
-            android:id="@+id/save_label_button"
-            android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_weight="1"
-            android:text="Save Labels"
-            android:textSize="14sp"
-            android:textColor="@android:color/white"
-            android:background="@drawable/button_primary"
-            android:layout_marginEnd="8dp" />
+            android:id="@+id/saveLabelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Label"
+            android:layout_margin="5dp" />
 
         <Button
-            android:id="@+id/clear_all_button"
-            android:layout_width="0dp"
-            android:layout_height="55dp"
-            android:layout_weight="1"
+            android:id="@+id/clearLabelsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Clear All"
-            android:textSize="14sp"
-            android:textColor="#E74C3C"
-            android:background="@drawable/button_primary" />
-
+            android:layout_margin="5dp" />
     </LinearLayout>
 
-    <!-- Back Button -->
     <Button
-        android:id="@+id/back_button"
+        android:id="@+id/backButton"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
         android:text="Back to Main"
-        android:textSize="16sp"
-        android:background="@android:color/transparent"
-        android:textColor="#6C757D" />
-
-</RelativeLayout>
+        android:layout_marginTop="8dp" />
+</LinearLayout>

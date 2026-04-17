@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements TextToSpeech.OnIn
             
             // Delay navigation to show animation
             new Handler().postDelayed(() -> {
-                Intent intent = new Intent(MainActivity.this, ImageLabelingActivity.class);
+                Intent intent = new Intent(MainActivity.this, ImageSelectionActivity.class);
                 startActivity(intent);
             }, 200);
         });

@@ -31,25 +31,15 @@ public class ImageLabelingActivity extends AppCompatActivity {
         backButton = findViewById(R.id.backButton);
 
         // 🔹 Fetch image from Firebase
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("demoImageUrl");
-        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                String imageUrl = snapshot.getValue(String.class);
-                if (imageUrl != null && !imageUrl.isEmpty()) {
-                    Glide.with(ImageLabelingActivity.this)
-                            .load(imageUrl)
-                            .into(imageView);
-                } else {
-                    Toast.makeText(ImageLabelingActivity.this, "No image URL found", Toast.LENGTH_SHORT).show();
-                }
-            }
+        String imageName = getIntent().getStringExtra("imageName");
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Toast.makeText(ImageLabelingActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        if (imageName != null) {
+            if (imageName.equals("image1")) {
+                imageView.setImageResource(R.drawable.sample1);
+            } else if (imageName.equals("image2")) {
+                imageView.setImageResource(R.drawable.sample2);
             }
-        });
+        }
 
         // 🔹 Add Label button
         addLabelButton.setOnClickListener(v -> showLabelDialog());

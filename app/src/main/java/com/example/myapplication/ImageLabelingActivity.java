@@ -2,33 +2,36 @@ package com.example.myapplication;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.firebase.database.*;
 
 import android.graphics.RectF;
 
-import java.util.HashMap;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
- * Loads the image from a Supabase public URL (passed via Intent "imageUrl")
- * and lets the user draw labelled rectangles on it.
+ * Labels are saved to SharedPreferences as JSON under the key "labels_<imageName>".
+ * They are loaded automatically every time this screen opens.
  *
- * Labels are still saved to Firebase Realtime Database under "imageLabels/<imageName>/".
- * (If you want to move labels to Supabase too, swap the Firebase block for a
- *  Supabase REST call to the "labels" table — see SupabaseClient for the base URL.)
+ * No Firebase needed.
  */
 public class ImageLabelingActivity extends AppCompatActivity {
 
+    private static final String PREFS_NAME = "ImageLabels";
+
     private TouchImageView imageView;
-    private Button addLabelButton, saveLabelButton, clearLabelsButton, backButton;
-    private String currentLabelName = null;
+    private Button addLabelButton, saveLabelButton, deleteButton, backButton;
+
     private String imageName = "unknown";
 
     @Override
@@ -36,11 +39,11 @@ public class ImageLabelingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_labeling);
 
-        imageView        = findViewById(R.id.imageView);
-        addLabelButton   = findViewById(R.id.addLabelButton);
-        saveLabelButton  = findViewById(R.id.saveLabelButton);
-        clearLabelsButton = findViewById(R.id.clearLabelsButton);
-        backButton       = findViewById(R.id.backButton);
+        imageView       = findViewById(R.id.imageView);
+        addLabelButton  = findViewById(R.id.addLabelButton);
+        saveLabelButton = findViewById(R.id.saveLabelButton);
+        deleteButton    = findViewById(R.id.clearLabelsButton); // existing button id
+        backButton      = findViewById(R.id.backButton);
 
         // ── Load image from Supabase URL ──────────────────────────────────────
         String imageUrl = getIntent().getStringExtra("imageUrl");
@@ -51,25 +54,32 @@ public class ImageLabelingActivity extends AppCompatActivity {
             Glide.with(this)
                     .load(imageUrl)
                     .placeholder(android.R.drawable.ic_menu_gallery)
-                    .error(android.R.drawable.ic_menu_close_clear_cancel)
                     .into(imageView);
-        } else {
-            Toast.makeText(this, "No image URL provided", Toast.LENGTH_SHORT).show();
         }
 
+        // ── Load previously saved labels for this image ───────────────────────
+        loadLabels();
+
         // ── Button listeners ──────────────────────────────────────────────────
-        addLabelButton.setOnClickListener(v -> showLabelDialog());
-        saveLabelButton.setOnClickListener(v -> saveLabelsToFirebase());
-        clearLabelsButton.setOnClickListener(v -> {
-            imageView.clearRectangles();
-            Toast.makeText(this, "All labels cleared", Toast.LENGTH_SHORT).show();
+
+        // Add Label — prompts for a name, then lets user draw a rectangle
+        addLabelButton.setOnClickListener(v -> showAddLabelDialog());
+
+        // Save Labels — persists current labels to SharedPreferences
+        saveLabelButton.setOnClickListener(v -> {
+            saveLabels();
+            Toast.makeText(this, "Labels saved!", Toast.LENGTH_SHORT).show();
         });
+
+        // Delete Label — shows list of existing labels to pick one to remove
+        deleteButton.setOnClickListener(v -> showDeleteDialog());
+
         backButton.setOnClickListener(v -> finish());
     }
 
-    // ── Label dialog ──────────────────────────────────────────────────────────
+    // ── Add label dialog ──────────────────────────────────────────────────────
 
-    private void showLabelDialog() {
+    private void showAddLabelDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Enter Label Name");
 
@@ -78,12 +88,13 @@ public class ImageLabelingActivity extends AppCompatActivity {
         builder.setView(input);
 
         builder.setPositiveButton("OK", (dialog, which) -> {
-            currentLabelName = input.getText().toString().trim();
-            if (currentLabelName.isEmpty()) {
-                Toast.makeText(this, "Label name cannot be empty", Toast.LENGTH_SHORT).show();
+            String label = input.getText().toString().trim();
+            if (label.isEmpty()) {
+                Toast.makeText(this, "Label name cannot be empty",
+                        Toast.LENGTH_SHORT).show();
             } else {
-                imageView.setCurrentLabel(currentLabelName);
-                Toast.makeText(this, "Draw rectangle for: " + currentLabelName,
+                imageView.setCurrentLabel(label);
+                Toast.makeText(this, "Draw rectangle for: " + label,
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -92,38 +103,109 @@ public class ImageLabelingActivity extends AppCompatActivity {
         builder.show();
     }
 
-    // ── Save to Firebase ──────────────────────────────────────────────────────
+    // ── Delete label dialog ───────────────────────────────────────────────────
 
-    private void saveLabelsToFirebase() {
-        List<TouchImageView.LabeledRect> labels = imageView.getLabeledRects();
-        if (labels.isEmpty()) {
-            Toast.makeText(this, "No labels to save!", Toast.LENGTH_SHORT).show();
+    private void showDeleteDialog() {
+        List<TouchImageView.LabeledRect> rects = imageView.getLabeledRects();
+
+        if (rects.isEmpty()) {
+            Toast.makeText(this, "No labels to delete", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Store under imageLabels/<imageName>/  so each image has its own node
-        DatabaseReference labelsRef = FirebaseDatabase.getInstance()
-                .getReference("imageLabels")
-                .child(imageName.replaceAll("[.#$\\[\\]]", "_")); // sanitise key
-
-        Map<String, Object> data = new HashMap<>();
-        int i = 1;
-        for (TouchImageView.LabeledRect lr : labels) {
-            Map<String, Object> labelData = new HashMap<>();
-            labelData.put("label",  lr.label);
-            labelData.put("left",   lr.rect.left);
-            labelData.put("top",    lr.rect.top);
-            labelData.put("right",  lr.rect.right);
-            labelData.put("bottom", lr.rect.bottom);
-            data.put("Label_" + i, labelData);
-            i++;
+        // Build list of label names to show in dialog
+        String[] labelNames = new String[rects.size() + 1];
+        for (int i = 0; i < rects.size(); i++) {
+            labelNames[i] = (i + 1) + ". " + rects.get(i).label;
         }
+        labelNames[rects.size()] = "🗑 Clear ALL labels";
 
-        labelsRef.setValue(data)
-                .addOnSuccessListener(unused ->
-                        Toast.makeText(this, "Labels saved!", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed: " + e.getMessage(),
-                                Toast.LENGTH_SHORT).show());
+        new AlertDialog.Builder(this)
+                .setTitle("Select label to delete")
+                .setItems(labelNames, (dialog, which) -> {
+                    if (which == rects.size()) {
+                        // Clear all
+                        imageView.clearRectangles();
+                        Toast.makeText(this, "All labels cleared",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Delete the selected one by index
+                        String deleted = rects.get(which).label;
+                        rects.remove(which);
+                        imageView.setLabeledRects(rects);
+                        Toast.makeText(this, "Deleted: " + deleted,
+                                Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    // ── SharedPreferences: save ───────────────────────────────────────────────
+
+    private void saveLabels() {
+        List<TouchImageView.LabeledRect> labels = imageView.getLabeledRects();
+        try {
+            JSONArray array = new JSONArray();
+            for (TouchImageView.LabeledRect lr : labels) {
+                JSONObject obj = new JSONObject();
+                obj.put("label",  lr.label);
+                obj.put("left",   lr.rect.left);
+                obj.put("top",    lr.rect.top);
+                obj.put("right",  lr.rect.right);
+                obj.put("bottom", lr.rect.bottom);
+                array.put(obj);
+            }
+
+            SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+            prefs.edit()
+                    .putString(keyFor(imageName), array.toString())
+                    .apply();
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Save error: " + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // ── SharedPreferences: load ───────────────────────────────────────────────
+
+    private void loadLabels() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        String json = prefs.getString(keyFor(imageName), null);
+
+        if (json == null) return; // no saved labels yet
+
+        try {
+            JSONArray array = new JSONArray(json);
+            List<TouchImageView.LabeledRect> rects = new ArrayList<>();
+
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject obj = array.getJSONObject(i);
+                String label   = obj.getString("label");
+                RectF  rect    = new RectF(
+                        (float) obj.getDouble("left"),
+                        (float) obj.getDouble("top"),
+                        (float) obj.getDouble("right"),
+                        (float) obj.getDouble("bottom"));
+                rects.add(new TouchImageView.LabeledRect(rect, label));
+            }
+
+            imageView.setLabeledRects(rects);
+
+            Toast.makeText(this,
+                    rects.size() + " label(s) loaded", Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+            Toast.makeText(this, "Load error: " + e.getMessage(),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    // ── Helper: unique SharedPreferences key per image ────────────────────────
+
+    private String keyFor(String name) {
+        // Sanitise the filename so it's a valid prefs key
+        return "labels_" + name.replaceAll("[^a-zA-Z0-9_]", "_");
     }
 }
